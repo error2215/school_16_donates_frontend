@@ -80,7 +80,11 @@
   margin: 0 auto;
   position: relative;
   z-index: 1; /* Ensure the miniBoard is above the background */
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.5); /* Add box-shadow */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.5);
+
+  .disabled {
+    background-color: salmon !important;
+  } /* Add box-shadow */
 }
 
 .miniSquare {
@@ -89,4 +93,38 @@
   background-size: 500px 500px; /* Ensure the image covers the entire grid */
   background-repeat: no-repeat;
   border: 1px solid rgba(255, 255, 255, 0.5); /* Add a light border */
+  cursor: pointer;
+}
+.miniSquareInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flipped .miniSquareInner {
+  transform: rotateY(180deg); // Flip to back
+}
+
+.miniSquareFront,
+.miniSquareBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.miniSquareFront {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: white; // Ensure the front side has a background color
+}
+
+.miniSquareBack {
+  background-size: 500px 500px; // Ensure the background size covers the entire grid
+  transform: rotateY(180deg);
 }

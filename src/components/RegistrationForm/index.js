@@ -3,12 +3,13 @@ import * as styles from "./styles.module.scss";
 import registrationImage from "../../../static/img/registration.png";
 import VideoModal from "../VideoModal";
 
-function RegistrationForm({ onClose }) {
+function RegistrationForm({ classId, id, onClose }) {
   const [formData, setFormData] = useState({
+    id: id,
     name: "",
-    email: "",
     password: "",
     confirmPassword: "",
+    class_id: classId,
   });
 
   const [passwordError, setPasswordError] = useState("");
@@ -24,6 +25,45 @@ function RegistrationForm({ onClose }) {
     });
   };
 
+  const checkNameAvailability = async (name) => {
+    const response = await fetch(
+      `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/user/name_is_free?name=${encodeURIComponent(
+        name
+      )}`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const result = await response.json();
+    return result.exists;
+  };
+
+  const registerUser = async (id, name, password, class_id) => {
+    const response = await fetch(
+      `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/user/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, name, password, class_id }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const result = await response.json();
+    console.log(result);
+    return result.success;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setPasswordError("");
@@ -34,41 +74,31 @@ function RegistrationForm({ onClose }) {
       return;
     }
 
-    // Simulate checking if the name is already used in the backend database
     try {
-      // Simulate a delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Simulate a successful response
-      const response = { ok: true, json: async () => ({ exists: false }) };
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const result = await response.json();
-      if (result.exists) {
+      const nameExists = await checkNameAvailability(formData.name);
+      if (nameExists) {
         setNameError("Name is already used");
         return;
       }
 
-      // Simulate sending data to the backend database
-      const registerResponse = {
-        ok: true,
-        json: async () => ({ success: true }),
-      };
+      const registrationSuccess = await registerUser(
+        formData.id,
+        formData.name,
+        formData.password,
+        formData.class_id
+      );
 
-      if (!registerResponse.ok) {
-        throw new Error("Network response was not ok");
+      if (registrationSuccess) {
+        console.log("Success: User registered");
+        setIsRegistrationSuccessful(true); // Indicate successful registration
+      } else {
+        throw new Error("Registration failed");
       }
-
-      const registerResult = await registerResponse.json();
-      console.log("Success:", registerResult);
-      setIsRegistrationSuccessful(true); // Indicate successful registration
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
   return (
     <div className={styles.modalContent}>
       {isRegistrationSuccessful ? (
@@ -86,16 +116,6 @@ function RegistrationForm({ onClose }) {
               required
             />
           </label>
-          {/* <label>
-        Email:
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </label> */}
           <label>
             Пароль:
             <input
@@ -117,6 +137,7 @@ function RegistrationForm({ onClose }) {
             />
           </label>
           {passwordError && <p className={styles.error}>{passwordError}</p>}
+          {nameError && <p className={styles.error}>{nameError}</p>}
           <button type="submit">Зареєструватися!</button>
           <div className={styles.registrationImageDiv}>
             <img
