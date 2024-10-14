@@ -1,52 +1,50 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/index.js", // Adjust the entry point as needed
+  mode: "development", // or 'production'
+  entry: "./src/index.js",
   output: {
-    filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
+  },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "public"),
+    },
+    compress: true,
+    port: 8081,
+  },
+  watchOptions: {
+    poll: 1000, // Check for changes every second
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/, // Match both .js and .jsx files
+        test: /\.js$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-          },
         },
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)$/, // Match image files
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]",
-              outputPath: "images/", // Output directory for images
-            },
-          },
-        ],
       },
       {
         test: /\.scss$/,
         use: [
           "style-loader", // Injects styles into DOM
+          "css-loader", // Turns CSS into CommonJS
+          "sass-loader", // Compiles Sass to CSS
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
           {
-            loader: "css-loader",
+            loader: "file-loader",
             options: {
-              modules: true, // Enable CSS modules
+              name: "[path][name].[ext]",
             },
           },
-          "sass-loader", // Compiles Sass to CSS
         ],
       },
     ],
   },
-  resolve: {
-    extensions: [".js", ".jsx"], // Resolve both .js and .jsx extensions
-  },
-  mode: "development", // Change to 'production' for production builds
 };
