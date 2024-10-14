@@ -1,0 +1,27 @@
+.progressBarContainer {
+  width: 25%;
+  background-color: #e0e0e0;
+  border-radius: 25px;
+  overflow: hidden;
+  margin: -45px auto;
+  position: relative;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.progressBar {
+  height: 30px;
+  background-color: rgba(160, 200, 255, 255);
+  width: 0;
+  transition: width 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.progressBarText {
+  color: white;
+  font-weight: bold;
+}

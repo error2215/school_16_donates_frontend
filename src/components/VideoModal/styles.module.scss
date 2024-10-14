@@ -1,0 +1,22 @@
+.videoModal {
+  position: static;
+}
+
+.videoModalContent {
+  text-align: center;
+}
+
+.actionButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #76c7c0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.actionButton:hover {
+  background-color: #5aa9a8;
+}
