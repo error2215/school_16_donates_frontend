@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import * as styles from "./styles.module.scss";
 import registrationImage from "../../../static/img/registration.png";
 import VideoModal from "../VideoModal";
+import LogIn from "../LogIn";
 
-function RegistrationForm({ classId, id, onClose }) {
+function RegistrationForm({ classId, id, onClose, userValues }) {
   const [formData, setFormData] = useState({
     id: id,
     name: "",
@@ -102,7 +103,7 @@ function RegistrationForm({ classId, id, onClose }) {
   return (
     <div className={styles.modalContent}>
       {isRegistrationSuccessful ? (
-        <VideoModal onClose={onClose} />
+        <LogIn onClose={onClose} id={id} userValues={userValues} />
       ) : (
         <form className={styles.registrationForm} onSubmit={handleSubmit}>
           <h2>Реєстрація</h2>

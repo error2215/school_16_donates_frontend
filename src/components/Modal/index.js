@@ -8,9 +8,12 @@ import LogIn from "../LogIn";
 function Modal({ onClose, classId, isVisible }) {
   const [isClosing, setIsClosing] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const [showLogIn, setShowLogIn] = useState(false);
   const [id, setId] = useState();
   const [flipped, setFlipped] = useState(Array(20).fill(false)); // Default to not flipped
   const [userIds, setUserIds] = useState([]);
+  const [userValues, setUserValues] = useState([]);
+  let progress = 0;
 
   useEffect(() => {
     if (isVisible) {
@@ -30,11 +33,18 @@ function Modal({ onClose, classId, isVisible }) {
           return response.json();
         })
         .then((data) => {
-          setUserIds(data.users);
-          console.log("data " + data.users);
+          if (data.users && typeof data.users === "object") {
+            setUserIds(Object.keys(data.users));
+            setUserValues(Object.values(data.users));
+          } else {
+            setUserIds([]);
+            setUserValues([]);
+          }
         })
         .catch((error) => {
           console.error("Error fetching user IDs:", error);
+          setUserIds([]);
+          setUserValues([]);
         });
     } else if (!isVisible && !isClosing) {
       setIsClosing(true);
@@ -48,7 +58,11 @@ function Modal({ onClose, classId, isVisible }) {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isVisible, isClosing]);
+  }, [isVisible, isClosing, classId]);
+
+  useEffect(() => {
+    console.log("Updated user IDs:", userIds);
+  }, [userIds]);
 
   const handleClose = () => {
     setIsClosing(true);
@@ -58,17 +72,17 @@ function Modal({ onClose, classId, isVisible }) {
   };
 
   const handleMiniSquareClick = (miniIndex) => {
+    const newId = `${classId}-${miniIndex.toString()}`;
+    setId(newId);
     setShowRegistrationForm(true);
-    setId(miniIndex.toString());
+    setShowLogIn(userIds.includes(newId));
+    console.log(`test ${showLogIn}`); // Log the newId instead of id
     setFlipped((prev) => {
       const newFlipped = [...prev];
       newFlipped[miniIndex] = !newFlipped[miniIndex];
       return newFlipped;
     });
   };
-
-  const flippedCount = flipped.filter(Boolean).length;
-  const progress = (flippedCount / flipped.length) * 100;
 
   return (
     <div
@@ -81,7 +95,16 @@ function Modal({ onClose, classId, isVisible }) {
           &times;
         </button>
         {showRegistrationForm ? (
-          <RegistrationForm classId={classId} id={id} onClose={handleClose} />
+          showLogIn ? (
+            <LogIn id={id} onClose={handleClose} userValues={userValues} />
+          ) : (
+            <RegistrationForm
+              classId={classId}
+              id={id}
+              onClose={handleClose}
+              userValues={userValues}
+            />
+          )
         ) : (
           // <LogIn onClose={handleClose} />
           <div className={styles.miniBoard}>
@@ -91,22 +114,39 @@ function Modal({ onClose, classId, isVisible }) {
                 const row = Math.floor(miniIndex / 5);
                 const col = miniIndex % 5;
                 const backgroundPosition = `${col * -100}px ${row * -125}px`;
-                console.log(userIds.includes(miniIndex.toString()));
+                const userIndex = userIds.indexOf(
+                  `${classId}-${miniIndex.toString()}`
+                );
+
+                const haveDonate = userValues[userIndex];
+
+                if (haveDonate) {
+                  progress += 5;
+                }
+
+                console.log("haveDonate", haveDonate);
+
                 return (
                   <div
                     key={miniIndex}
                     className={`${styles.miniSquare} ${
-                      flipped[miniIndex] ? styles.flipped : ""
-                    } ${
-                      userIds.includes(miniIndex.toString())
-                        ? styles.disabled
-                        : ""
-                    }`}
+                      haveDonate ? styles.flipped : ""
+                    } `}
                     onClick={() => handleMiniSquareClick(miniIndex)}
                   >
                     <div className={styles.miniSquareInner}>
-                      <div className={styles.miniSquareFront}>
-                        {userIds.includes(miniIndex.toString())
+                      <div
+                        className={`${styles.miniSquareFront} 
+                      
+                          ${
+                            userIds.includes(
+                              `${classId}-${miniIndex.toString()}`
+                            )
+                              ? styles.disabled
+                              : ""
+                          }`}
+                      >
+                        {userIds.includes(`${classId}-${miniIndex.toString()}`)
                           ? "Зайнято"
                           : miniIndex + 1}
                       </div>

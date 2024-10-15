@@ -82,9 +82,7 @@
   z-index: 1; /* Ensure the miniBoard is above the background */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.5);
 
-  .disabled {
-    background-color: salmon !important;
-  } /* Add box-shadow */
+  /* Add box-shadow */
 }
 
 .miniSquare {
@@ -127,4 +125,8 @@
 .miniSquareBack {
   background-size: 500px 500px; // Ensure the background size covers the entire grid
   transform: rotateY(180deg);
+}
+
+.disabled {
+  background-color: salmon !important;
 }

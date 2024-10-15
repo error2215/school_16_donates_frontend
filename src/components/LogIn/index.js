@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import * as styles from "./styles.module.scss";
 import registrationImage from "../../../static/img/registration.png";
+import VideoModal from "../VideoModal"; // Import the VideoModal component
 
-function LogIn({ onClose }) {
+function LogIn({ onClose, id, userValues }) {
   const [formData, setFormData] = useState({
     name: "",
     password: "",
@@ -10,6 +11,8 @@ function LogIn({ onClose }) {
 
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
+  const [userBoolean, setUserBoolean] = useState(null);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -53,7 +56,10 @@ function LogIn({ onClose }) {
         localStorage.setItem("tokenExpiration", expirationTime);
 
         // Handle successful login logic here
-        onClose();
+        setIsLoginSuccessful(true); // Indicate successful login
+
+        const userBooleanValue = userValues[0]; // Adjust the index as needed
+        setUserBoolean(userBooleanValue);
       } else {
         setLoginError("Неправильне ім'я або пароль");
       }
@@ -84,39 +90,49 @@ function LogIn({ onClose }) {
   };
 
   return (
-    <form className={styles.registrationForm} onSubmit={handleSubmit}>
-      <h2>Вхід</h2>
-      <label>
-        Ім'я:
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <label>
-        Пароль:
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      {passwordError && <p className={styles.error}>{passwordError}</p>}
-      {loginError && <p className={styles.error}>{loginError}</p>}
-      <button type="submit">Увійти</button>
-      <div className={styles.registrationImageDiv}>
-        <img
-          className={styles.registrationImage}
-          src={registrationImage}
-          alt="Registration"
-        />
-      </div>
-    </form>
+    <div>
+      {isLoginSuccessful ? (
+        userBoolean ? (
+          <h1>list</h1>
+        ) : (
+          <VideoModal onClose={onClose} id={id} />
+        )
+      ) : (
+        <form className={styles.registrationForm} onSubmit={handleSubmit}>
+          <h2>Вхід</h2>
+          <label>
+            Ім'я:
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          <label>
+            Пароль:
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          {passwordError && <p className={styles.error}>{passwordError}</p>}
+          {loginError && <p className={styles.error}>{loginError}</p>}
+          <button type="submit">Увійти</button>
+          <div className={styles.registrationImageDiv}>
+            <img
+              className={styles.registrationImage}
+              src={registrationImage}
+              alt="Registration"
+            />
+          </div>
+        </form>
+      )}
+    </div>
   );
 }
 
