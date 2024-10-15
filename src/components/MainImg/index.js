@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as styles from "./styles.module.scss"; // Ensure the path is correct
 import Modal from "../Modal"; // Ensure the path is correct
-import kakashiImage from "../../../static/img/kakashi-hatake_2560x1440_xtrafondos.com.jpg"; // Adjust the path as needed
+import ClassImage from "../../../static/img/class.png"; // Adjust the path as needed
 
 function MainImg() {
   const classes = [
@@ -42,7 +42,7 @@ function MainImg() {
     // Set the CSS variable for the background image
     document.documentElement.style.setProperty(
       "--background-image",
-      `url(${kakashiImage})`
+      `url(${ClassImage})`
     );
   }, []);
 
@@ -83,7 +83,7 @@ function MainImg() {
                   className={styles.chessSquareFront}
                   style={{
                     backgroundPosition,
-                    backgroundImage: `url(${kakashiImage})`,
+                    backgroundImage: `url(${ClassImage})`,
                   }}
                 ></div>
                 <div className={styles.chessSquareBack}>{value}</div>

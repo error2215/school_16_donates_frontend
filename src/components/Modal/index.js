@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as styles from "./styles.module.scss";
-import kakashiImage from "../../../static/img/kakashi-hatake_2560x1440_xtrafondos.com.jpg"; // Adjust the path as needed
+import ClassImage from "../../../static/img/class.png"; // Adjust the path as needed
 import RegistrationForm from "../RegistrationForm"; // Import the RegistrationForm component
 import ProgressBar from "../ProgressBar"; // Import the ProgressBar component
 import LogIn from "../LogIn";
@@ -81,9 +81,9 @@ function Modal({ onClose, classId, isVisible }) {
           &times;
         </button>
         {showRegistrationForm ? (
-          // <RegistrationForm classId={classId} id={id} onClose={handleClose} />
-          <LogIn onClose={handleClose} />
+          <RegistrationForm classId={classId} id={id} onClose={handleClose} />
         ) : (
+          // <LogIn onClose={handleClose} />
           <div className={styles.miniBoard}>
             {Array(20)
               .fill(null)
@@ -114,7 +114,7 @@ function Modal({ onClose, classId, isVisible }) {
                         className={styles.miniSquareBack}
                         style={{
                           backgroundPosition,
-                          backgroundImage: `url(${kakashiImage})`,
+                          backgroundImage: `url(${ClassImage})`,
                         }}
                       ></div>
                     </div>
