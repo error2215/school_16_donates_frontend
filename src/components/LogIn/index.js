@@ -3,7 +3,7 @@ import * as styles from "./styles.module.scss";
 import registrationImage from "../../../static/img/registration.png";
 import VideoModal from "../VideoModal"; // Import the VideoModal component
 
-function LogIn({ onClose, id, userValues }) {
+function LogIn({ onClose, classId, id, userValues }) {
   const [formData, setFormData] = useState({
     name: "",
     password: "",
@@ -13,6 +13,7 @@ function LogIn({ onClose, id, userValues }) {
   const [loginError, setLoginError] = useState("");
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
   const [userBoolean, setUserBoolean] = useState(null);
+  const [userData, setUserData] = useState([]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -48,18 +49,33 @@ function LogIn({ onClose, id, userValues }) {
 
       const result = await response.json();
       if (result.token) {
-        // Calculate the expiration time (48 hours from now)
         const expirationTime = new Date().getTime() + 72 * 60 * 60 * 1000;
 
-        // Store the JWT token and expiration time in local storage
         localStorage.setItem("token", result.token);
         localStorage.setItem("tokenExpiration", expirationTime);
 
-        // Handle successful login logic here
-        setIsLoginSuccessful(true); // Indicate successful login
+        const getResponse = await fetch(
+          `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/admin/users?class_id=${classId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${result.token}`,
+            },
+          }
+        );
 
-        const userBooleanValue = userValues[0]; // Adjust the index as needed
-        setUserBoolean(userBooleanValue);
+        if (!getResponse.ok) {
+          setIsLoginSuccessful(true);
+          throw new Error("Not admin");
+        }
+
+        const getData = await getResponse.json();
+        console.log("Data fetched with JWT token:", getData);
+        setUserData(getData);
+        setUserBoolean(true);
+
+        setIsLoginSuccessful(true);
       } else {
         setLoginError("Неправильне ім'я або пароль");
       }
@@ -89,11 +105,111 @@ function LogIn({ onClose, id, userValues }) {
     return token;
   };
 
+  const handleInputChange = (index, field, value) => {
+    const updatedUserData = [...userData];
+    updatedUserData[index][field] = value;
+    setUserData(updatedUserData);
+  };
+
+  const handleCheckboxClick = async (user) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/admin/user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(user),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log("User data updated:", result);
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
+
   return (
     <div>
       {isLoginSuccessful ? (
         userBoolean ? (
-          <h1>list</h1>
+          <div>
+            <h1>list</h1>
+            <table className={styles.userTable}>
+              <thead>
+                <tr>
+                  <th style={{ display: "none" }}>ID</th>
+                  <th>Name</th>
+                  <th>Password</th>
+                  <th style={{ display: "none" }}>ClassId</th>
+                  <th style={{ display: "none" }}>Admin</th>
+                  <th style={{ display: "none" }}>TestBlockPass</th>
+
+                  <th>Donated</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userData.map((user, index) => (
+                  <tr key={index}>
+                    <td style={{ display: "none" }}>{user.id}</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={user.name}
+                        onChange={(e) =>
+                          handleInputChange(index, "name", e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={user.password}
+                        onChange={(e) =>
+                          handleInputChange(index, "password", e.target.value)
+                        }
+                      />
+                    </td>
+                    <td style={{ display: "none" }}>{user.class_id}</td>
+                    <td style={{ display: "none" }}>{user.admin ? 1 : 0}</td>
+                    <td style={{ display: "none" }}>
+                      {user.test_blocks_passed}
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={user.donated}
+                        onChange={(e) =>
+                          handleInputChange(
+                            index,
+                            "donated",
+                            Number(e.target.value)
+                          )
+                        }
+                      />
+                    </td>
+                    <td>
+                      <button
+                        type="submit"
+                        onClick={() => handleCheckboxClick(user)}
+                      >
+                        Оновити дані
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <VideoModal onClose={onClose} id={id} />
         )

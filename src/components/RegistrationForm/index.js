@@ -41,7 +41,8 @@ function RegistrationForm({ classId, id, onClose, userValues }) {
     }
 
     const result = await response.json();
-    return result.exists;
+    console.log("name " + result.is_free);
+    return result.is_free;
   };
 
   const registerUser = async (id, name, password, class_id) => {
@@ -77,8 +78,8 @@ function RegistrationForm({ classId, id, onClose, userValues }) {
 
     try {
       const nameExists = await checkNameAvailability(formData.name);
-      if (nameExists) {
-        setNameError("Name is already used");
+      if (!nameExists) {
+        setNameError("Такий учень вже зареєстрований");
         return;
       }
 
@@ -103,7 +104,12 @@ function RegistrationForm({ classId, id, onClose, userValues }) {
   return (
     <div className={styles.modalContent}>
       {isRegistrationSuccessful ? (
-        <LogIn onClose={onClose} id={id} userValues={userValues} />
+        <LogIn
+          onClose={onClose}
+          classId={classId}
+          id={id}
+          userValues={userValues}
+        />
       ) : (
         <form className={styles.registrationForm} onSubmit={handleSubmit}>
           <h2>Реєстрація</h2>

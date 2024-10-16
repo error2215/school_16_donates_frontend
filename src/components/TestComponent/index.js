@@ -55,6 +55,7 @@ const TestComponent = ({ onClose, id }) => {
       </span>
       <p>This is the test content!</p>
       <pre>{JSON.stringify(data, null, 2)}</pre>
+      <button onClick={onClose}>Далі</button>
     </div>
   );
 };

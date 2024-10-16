@@ -36,7 +36,9 @@ function MainImg() {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentZoomIndex, setCurrentZoomIndex] = useState(null);
   const [classId, setClassId] = useState(null);
-  const [flipped, setFlipped] = useState(Array(classes.length).fill(false)); // Default to flipped
+  const [flipped, setFlipped] = useState(Array(classes.length).fill(false));
+  const [donationAmount, setDonationAmount] = useState(null);
+  const [classesData, setClassesData] = useState({});
 
   useEffect(() => {
     // Set the CSS variable for the background image
@@ -44,6 +46,59 @@ function MainImg() {
       "--background-image",
       `url(${ClassImage})`
     );
+    const fetchDonationAmount = async () => {
+      try {
+        const response = await fetch(
+          "https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/result",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setDonationAmount(data.donates); // Assuming the API returns an object with an 'amount' field
+      } catch (error) {
+        console.error("Error fetching donation amount:", error);
+      }
+    };
+    const fetchClassesData = async () => {
+      try {
+        const response = await fetch(
+          "https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/classes",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log("Classes data:", data);
+        if (data.classes && typeof data.classes === "object") {
+          setClassesData(data.classes);
+        } else {
+          setClassesData({});
+        }
+      } catch (error) {
+        console.error("Error fetching classes data:", error);
+        setClassesData({});
+      }
+    };
+
+    fetchDonationAmount();
+    fetchClassesData();
   }, []);
 
   const handleZoom = (index, value) => {
@@ -69,12 +124,12 @@ function MainImg() {
           const row = Math.floor(index / 5); // 5 columns
           const col = index % 5;
           const backgroundPosition = `${col * -150}px ${row * -200}px`; // Adjust based on grid size
-
+          const shouldFlip = classesData[value];
           return (
             <div
               key={index}
               className={`${styles.chessSquare} ${
-                flipped[index] ? styles.flipped : ""
+                shouldFlip ? styles.flipped : ""
               }`}
               onClick={() => handleZoom(index, value)}
             >
@@ -102,7 +157,11 @@ function MainImg() {
         )}
       </div>
       <div className={styles.sum}>
-        <h1>Дякуємо за донат! Вже зібрано : </h1>
+        <h1>
+          Дякуємо за донат! Вже зібрано :{" "}
+          {donationAmount !== null ? donationAmount : "Loading..."}
+          &#8372; (гривень)
+        </h1>
       </div>
     </div>
   );

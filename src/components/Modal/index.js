@@ -84,6 +84,18 @@ function Modal({ onClose, classId, isVisible }) {
     });
   };
 
+  userValues.forEach((haveDonate) => {
+    if (haveDonate) {
+      progress += 5;
+    }
+  });
+
+  useEffect(() => {
+    if (progress >= 80) {
+      setFlipped(Array(20).fill(true));
+    }
+  }, [progress]);
+
   return (
     <div
       className={`${styles.modal} ${
@@ -96,7 +108,12 @@ function Modal({ onClose, classId, isVisible }) {
         </button>
         {showRegistrationForm ? (
           showLogIn ? (
-            <LogIn id={id} onClose={handleClose} userValues={userValues} />
+            <LogIn
+              id={id}
+              classId={classId}
+              onClose={handleClose}
+              userValues={userValues}
+            />
           ) : (
             <RegistrationForm
               classId={classId}
@@ -117,20 +134,12 @@ function Modal({ onClose, classId, isVisible }) {
                 const userIndex = userIds.indexOf(
                   `${classId}-${miniIndex.toString()}`
                 );
-
                 const haveDonate = userValues[userIndex];
-
-                if (haveDonate) {
-                  progress += 5;
-                }
-
-                console.log("haveDonate", haveDonate);
-
                 return (
                   <div
                     key={miniIndex}
                     className={`${styles.miniSquare} ${
-                      haveDonate ? styles.flipped : ""
+                      flipped[miniIndex] || haveDonate ? styles.flipped : ""
                     } `}
                     onClick={() => handleMiniSquareClick(miniIndex)}
                   >
