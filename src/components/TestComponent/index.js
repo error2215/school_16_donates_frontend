@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
-import * as styles from "./styles.module.scss"; // Assuming you have some CSS for styling
+import * as styles from "./styles.module.scss"; // Import the CSS module
 
-const TestComponent = ({ onClose, id }) => {
+const TestComponent = ({
+  onClose,
+  id,
+  onNextVideo,
+  setNoQuestions,
+  noQuestions,
+  number,
+}) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  console.log("id", id);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [resultMessage, setResultMessage] = useState("");
+  const [allCorrect, setAllCorrect] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,7 +39,11 @@ const TestComponent = ({ onClose, id }) => {
         }
 
         const result = await response.json();
-        setData(result);
+        if (result.length === 0) {
+          setNoQuestions(true);
+        } else {
+          setData(result);
+        }
       } catch (error) {
         setError(error);
       } finally {
@@ -38,10 +52,77 @@ const TestComponent = ({ onClose, id }) => {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, setNoQuestions]);
+
+  const handleCheckboxChange = (questionIndex, answerIndex) => {
+    setSelectedAnswers((prevSelectedAnswers) => {
+      const currentAnswers = prevSelectedAnswers[questionIndex] || [];
+      if (currentAnswers.includes(answerIndex)) {
+        // Remove the answer if it's already selected
+        return {
+          ...prevSelectedAnswers,
+          [questionIndex]: currentAnswers.filter(
+            (index) => index !== answerIndex
+          ),
+        };
+      } else {
+        // Add the answer if it's not selected
+        return {
+          ...prevSelectedAnswers,
+          [questionIndex]: [...currentAnswers, answerIndex],
+        };
+      }
+    });
+  };
+
+  const handleSubmit = () => {
+    let correctCount = 0;
+    let allCorrect = true;
+    data.forEach((question, questionIndex) => {
+      const correctAnswers = question.answers
+        .map((answer, index) => (answer.is_correct ? index : null))
+        .filter((index) => index !== null);
+      const userAnswers = selectedAnswers[questionIndex] || [];
+      if (
+        correctAnswers.length === userAnswers.length &&
+        correctAnswers.every((index) => userAnswers.includes(index))
+      ) {
+        correctCount++;
+      } else {
+        allCorrect = false;
+      }
+    });
+
+    setResultMessage(
+      `You answered ${correctCount} out of ${data.length} questions correctly.`
+    );
+    setAllCorrect(allCorrect);
+  };
+
+  const handlePostResults = async () => {
+    const token = localStorage.getItem("token"); // Get the token from localStorage
+
+    const response = await fetch(
+      `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/user/test`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ user_id: id }),
+      }
+    );
+
+    if (response.ok && number <= 7) {
+      onNextVideo(); // Call the function to open the next video
+    } else {
+      <div className={styles.noQuestionsMessage}>No questions available.</div>;
+    }
+  };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Завантажую...</div>;
   }
 
   if (error) {
@@ -50,12 +131,37 @@ const TestComponent = ({ onClose, id }) => {
 
   return (
     <div className={styles.testComponent}>
-      <span className={styles.closeButton} onClick={onClose}>
-        &times;
-      </span>
-      <p>This is the test content!</p>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-      <button onClick={onClose}>Далі</button>
+      {data.map((question, questionIndex) => (
+        <div key={questionIndex} className={styles.questionBlock}>
+          <p>{question.question}</p>
+          {question.answers.map((answer, answerIndex) => (
+            <div key={answerIndex} className={styles.answerBlock}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={
+                    selectedAnswers[questionIndex] &&
+                    selectedAnswers[questionIndex].includes(answerIndex)
+                  }
+                  onChange={() =>
+                    handleCheckboxChange(questionIndex, answerIndex)
+                  }
+                />
+                {answer.text}
+              </label>
+            </div>
+          ))}
+        </div>
+      ))}
+      <button onClick={handleSubmit}>Підтвердити</button>
+      {resultMessage && (
+        <div className={styles.resultMessage}>{resultMessage}</div>
+      )}
+      {allCorrect && (
+        <button onClick={handlePostResults} className={styles.postButton}>
+          Результати тесту :
+        </button>
+      )}
     </div>
   );
 };

@@ -5,6 +5,17 @@
   width: 80%;
   max-width: 500px;
   margin: auto;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    padding: 10px;
+  }
 }
 
 .closeButton {
@@ -12,6 +23,10 @@
   float: right;
   font-size: 28px;
   font-weight: bold;
+
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
 }
 
 .closeButton:hover,
@@ -19,4 +34,93 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+.questionBlock {
+  margin-bottom: 20px;
+
+  @media (max-width: 480px) {
+    margin-bottom: 15px;
+    font-size: 12px;
+  }
+}
+
+.answerBlock {
+  margin-bottom: 10px;
+
+  @media (max-width: 480px) {
+    margin-bottom: 8px;
+  }
+}
+
+.answerBlock label {
+  display: flex;
+  align-items: center;
+}
+
+.answerBlock input[type="checkbox"] {
+  margin-right: 10px;
+
+  @media (max-width: 480px) {
+    margin-right: 8px;
+  }
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  @media (max-width: 480px) {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+button:hover {
+  background-color: #0056b3;
+  color: whitesmoke;
+}
+
+.resultMessage {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #28a745;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
+}
+
+.postButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  @media (max-width: 480px) {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+.postButton:hover {
+  background-color: #218838;
+}
+
+.noQuestionsMessage {
+  font-size: 18px;
+  color: #dc3545;
+  text-align: center;
+  margin-top: 20px;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 }

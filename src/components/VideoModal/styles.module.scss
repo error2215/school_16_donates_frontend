@@ -3,7 +3,30 @@
 }
 
 .videoModalContent {
+  display: flex;
   text-align: center;
+  flex-direction: column;
+  align-items: center;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  @media (max-width: 480px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  iframe {
+    @media (max-width: 768px) {
+      width: 200px;
+      height: 250px;
+    }
+    @media (max-width: 480px) {
+      width: 200px;
+      height: 250px;
+    }
+  }
 }
 
 .actionButton {
@@ -19,4 +42,10 @@
 
 .actionButton:hover {
   background-color: #5aa9a8;
+}
+.noQuestionsMessage {
+  font-size: 18px;
+  color: #dc3545;
+  text-align: center;
+  margin-top: 20px;
 }

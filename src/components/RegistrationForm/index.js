@@ -41,7 +41,6 @@ function RegistrationForm({ classId, id, onClose, userValues }) {
     }
 
     const result = await response.json();
-    console.log("name " + result.is_free);
     return result.is_free;
   };
 
@@ -62,7 +61,6 @@ function RegistrationForm({ classId, id, onClose, userValues }) {
     }
 
     const result = await response.json();
-    console.log(result);
     return result.success;
   };
 
@@ -91,7 +89,6 @@ function RegistrationForm({ classId, id, onClose, userValues }) {
       );
 
       if (registrationSuccess) {
-        console.log("Success: User registered");
         setIsRegistrationSuccessful(true); // Indicate successful registration
       } else {
         throw new Error("Registration failed");

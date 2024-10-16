@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import * as styles from "./styles.module.scss";
-import ClassImage from "../../../static/img/class.png"; // Adjust the path as needed
 import RegistrationForm from "../RegistrationForm"; // Import the RegistrationForm component
 import ProgressBar from "../ProgressBar"; // Import the ProgressBar component
 import LogIn from "../LogIn";
+import CertificateFetcher from "../Certificate";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 function Modal({ onClose, classId, isVisible }) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [isClosing, setIsClosing] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [showLogIn, setShowLogIn] = useState(false);
@@ -15,11 +17,40 @@ function Modal({ onClose, classId, isVisible }) {
   const [userValues, setUserValues] = useState([]);
   let progress = 0;
 
+  const classesUrl = {
+    "1A": "/1A.jpg",
+    "1Б": "/1B.jpg",
+    "2А": "/2A.jpg",
+    "2Б": "/2B.jpg",
+    "2В": "/2V.jpg",
+    "3А": "/3A.jpg",
+    "3Б": "/3B.jpg",
+    "3В": "/3V.jpg",
+    "4А": "/4A.jpg",
+    "4Б": "/4B.jpg",
+    "5А": "/5A.jpg",
+    "5Б": "/5B.jpg",
+    "6А": "/6A.jpg",
+    "6Б": "/6B.jpg",
+    "6В": "/6V.jpg",
+    "7А": "/7A.jpg",
+    "7Б": "/7B.jpg",
+    "7В": "/7V.jpg",
+    "8А": "/8A.jpg",
+    "8Б": "/8B.jpg",
+    "9А": "/9A.jpg",
+    "9Б": "/9B.jpg",
+    "10А": "/10A.jpg",
+    "10Б": "/10B.jpg",
+    11: "/11.jpg",
+  };
+
+  const backgroundImageUrl = classesUrl[classId];
+
   useEffect(() => {
     if (isVisible) {
       document.body.style.overflow = "hidden"; // Prevent background scrolling when modal is open
       setIsClosing(false);
-      console.log("classId", classId);
       // Fetch the list of user IDs from the API
       fetch(
         `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/class/users?class_id=${encodeURIComponent(
@@ -33,6 +64,7 @@ function Modal({ onClose, classId, isVisible }) {
           return response.json();
         })
         .then((data) => {
+          console.log("User IDs:", JSON.stringify(data));
           if (data.users && typeof data.users === "object") {
             setUserIds(Object.keys(data.users));
             setUserValues(Object.values(data.users));
@@ -60,9 +92,7 @@ function Modal({ onClose, classId, isVisible }) {
     };
   }, [isVisible, isClosing, classId]);
 
-  useEffect(() => {
-    console.log("Updated user IDs:", userIds);
-  }, [userIds]);
+  useEffect(() => {}, [userIds]);
 
   const handleClose = () => {
     setIsClosing(true);
@@ -76,7 +106,6 @@ function Modal({ onClose, classId, isVisible }) {
     setId(newId);
     setShowRegistrationForm(true);
     setShowLogIn(userIds.includes(newId));
-    console.log(`test ${showLogIn}`); // Log the newId instead of id
     setFlipped((prev) => {
       const newFlipped = [...prev];
       newFlipped[miniIndex] = !newFlipped[miniIndex];
@@ -112,6 +141,7 @@ function Modal({ onClose, classId, isVisible }) {
               id={id}
               classId={classId}
               onClose={handleClose}
+              userIds={userIds}
               userValues={userValues}
             />
           ) : (
@@ -130,7 +160,10 @@ function Modal({ onClose, classId, isVisible }) {
               .map((_, miniIndex) => {
                 const row = Math.floor(miniIndex / 5);
                 const col = miniIndex % 5;
-                const backgroundPosition = `${col * -100}px ${row * -125}px`;
+                const backgroundPosition = `${col * -160}px ${row * -100}px`;
+                const mobileBackgroundPosition = `${col * -80}px ${
+                  row * -50
+                }px`;
                 const userIndex = userIds.indexOf(
                   `${classId}-${miniIndex.toString()}`
                 );
@@ -162,8 +195,10 @@ function Modal({ onClose, classId, isVisible }) {
                       <div
                         className={styles.miniSquareBack}
                         style={{
-                          backgroundPosition,
-                          backgroundImage: `url(${ClassImage})`,
+                          backgroundPosition: isMobile
+                            ? mobileBackgroundPosition
+                            : backgroundPosition,
+                          backgroundImage: `url(${backgroundImageUrl})`,
                         }}
                       ></div>
                     </div>

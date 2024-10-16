@@ -5,7 +5,7 @@
   padding: 10px 125px;
   display: flex;
   height: 50px;
-  z-index: 22;
+  z-index: 1;
   position: relative;
   justify-content: space-between;
   align-items: center;
@@ -18,5 +18,31 @@
     cursor: pointer;
     width: 60px;
     margin-top: 40px;
+  }
+  @media (max-width: 768px) {
+    padding: 10px 50px;
+    font-size: 14px;
+
+    .donateImg {
+      width: 50px;
+      margin-top: 30px;
+    }
+  }
+  @media (max-width: 480px) {
+    padding: 10px 20px;
+    font-size: 12px;
+    flex-direction: column;
+    height: auto;
+    z-index: 0;
+
+    h1 {
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .donateImg {
+      width: 40px;
+      margin-top: 20px;
+    }
   }
 }

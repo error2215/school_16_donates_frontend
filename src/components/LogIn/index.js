@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import * as styles from "./styles.module.scss";
 import registrationImage from "../../../static/img/registration.png";
 import VideoModal from "../VideoModal"; // Import the VideoModal component
+import CertificateFetcher from "../Certificate"; // Import the CertificateFetcher component
 
-function LogIn({ onClose, classId, id, userValues }) {
+function LogIn({ id, classId, onClose, userIds, userValues }) {
   const [formData, setFormData] = useState({
     name: "",
     password: "",
@@ -71,7 +72,6 @@ function LogIn({ onClose, classId, id, userValues }) {
         }
 
         const getData = await getResponse.json();
-        console.log("Data fetched with JWT token:", getData);
         setUserData(getData);
         setUserBoolean(true);
 
@@ -131,7 +131,6 @@ function LogIn({ onClose, classId, id, userValues }) {
       }
 
       const result = await response.json();
-      console.log("User data updated:", result);
     } catch (error) {
       console.error("Error updating user data:", error);
     }
@@ -142,7 +141,7 @@ function LogIn({ onClose, classId, id, userValues }) {
       {isLoginSuccessful ? (
         userBoolean ? (
           <div>
-            <h1>list</h1>
+            <h1>Список учнів</h1>
             <table className={styles.userTable}>
               <thead>
                 <tr>
@@ -211,7 +210,13 @@ function LogIn({ onClose, classId, id, userValues }) {
             </table>
           </div>
         ) : (
-          <VideoModal onClose={onClose} id={id} />
+          <VideoModal
+            onClose={onClose}
+            id={id}
+            userIds={userIds}
+            userValues={userValues}
+          />
+          // <CertificateFetcher userId={id} />
         )
       ) : (
         <form className={styles.registrationForm} onSubmit={handleSubmit}>

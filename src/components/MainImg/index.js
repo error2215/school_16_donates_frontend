@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as styles from "./styles.module.scss"; // Ensure the path is correct
 import Modal from "../Modal"; // Ensure the path is correct
 import ClassImage from "../../../static/img/class.png"; // Adjust the path as needed
+import OpeningModal from "../OpeningModal";
 
 function MainImg() {
   const classes = [
@@ -85,7 +86,6 @@ function MainImg() {
         }
 
         const data = await response.json();
-        console.log("Classes data:", data);
         if (data.classes && typeof data.classes === "object") {
           setClassesData(data.classes);
         } else {
@@ -119,6 +119,7 @@ function MainImg() {
 
   return (
     <div className={styles.mainPage}>
+      <OpeningModal />
       <div className={styles.chessboard}>
         {zoomed.map((value, index) => {
           const row = Math.floor(index / 5); // 5 columns
