@@ -1,11 +1,14 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  mode: "development", // or 'production'
+  mode: "development", // Change to 'production' for production build
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
+    publicPath: "/", // Ensure correct routing
   },
   devServer: {
     static: {
@@ -13,6 +16,7 @@ module.exports = {
     },
     compress: true,
     port: 8081,
+    historyApiFallback: true, // Ensure correct routing for SPA
   },
   watchOptions: {
     poll: 1000, // Check for changes every second
@@ -47,4 +51,20 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "public",
+          to: ".",
+          globOptions: {
+            ignore: ["**/index.html"], // Ignore index.html to avoid conflict
+          },
+        },
+      ],
+    }),
+  ],
 };
