@@ -158,10 +158,10 @@ function Modal({ onClose, classId, isVisible }) {
               .fill(null)
               .map((_, miniIndex) => {
                 const row = Math.floor(miniIndex / 6);
-                const col = miniIndex % 6 ;
+                const col = miniIndex % 6;
                 const backgroundPosition = `${col * -200}px ${row * -120}px`;
-                const mobileBackgroundPosition = `${col * - 70}px ${
-                  row * - 42
+                const mobileBackgroundPosition = `${col * -70}px ${
+                  row * -42
                 }px`;
                 const userIndex = userIds.indexOf(
                   `${classId}-${miniIndex.toString()}`

@@ -3,7 +3,7 @@ import registrationImage from "../../../static/img/registration.png";
 import VideoModal from "../VideoModal"; // Import the VideoModal component
 import * as styles from "./styles.module.scss";
 
-function LogIn({classId, onClose, userIds, userValues }) {
+function LogIn({ classId, onClose, userIds, userValues }) {
   const [formData, setFormData] = useState({
     name: "",
     password: "",
@@ -24,17 +24,21 @@ function LogIn({classId, onClose, userIds, userValues }) {
   };
 
   // Utility function to decode JWT token
-function decodeJwt(token) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+  function decodeJwt(token) {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
 
-  return JSON.parse(jsonPayload);
-}
+    return JSON.parse(jsonPayload);
+  }
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setPasswordError("");
@@ -65,7 +69,7 @@ function decodeJwt(token) {
 
         localStorage.setItem("token", result.token);
         localStorage.setItem("tokenExpiration", expirationTime);
-        
+
         // const token = data.token; // Assuming the token is in the response
         const decodedToken = decodeJwt(result.token);
         const userId = decodedToken.user_id;
@@ -158,72 +162,74 @@ function decodeJwt(token) {
         userBoolean ? (
           <div>
             <h1>Список учнів</h1>
-            <table className={styles.userTable}>
-              <thead>
-                <tr>
-                  <th style={{ display: "none" }}>ID</th>
-                  <th>Ім'я</th>
-                  <th>Пароль</th>
-                  <th style={{ display: "none" }}>ClassId</th>
-                  <th style={{ display: "none" }}>Admin</th>
-                  <th style={{ display: "none" }}>TestBlockPass</th>
+            <div className={styles.tableContainer}>
+              <table className={styles.userTable}>
+                <thead>
+                  <tr>
+                    <th style={{ display: "none" }}>ID</th>
+                    <th>Ім'я</th>
+                    <th>Пароль</th>
+                    <th style={{ display: "none" }}>ClassId</th>
+                    <th style={{ display: "none" }}>Admin</th>
+                    <th style={{ display: "none" }}>TestBlockPass</th>
 
-                  <th>Задонатив</th>
-                  <th>Оновити</th>
-                </tr>
-              </thead>
-              <tbody>
-                {userData.map((user, index) => (
-                  <tr key={index}>
-                    <td style={{ display: "none" }}>{user.id}</td>
-                    <td>
-                      <input
-                        type="text"
-                        value={user.name}
-                        onChange={(e) =>
-                          handleInputChange(index, "name", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={user.password}
-                        onChange={(e) =>
-                          handleInputChange(index, "password", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td style={{ display: "none" }}>{user.class_id}</td>
-                    <td style={{ display: "none" }}>{user.admin ? 1 : 0}</td>
-                    <td style={{ display: "none" }}>
-                      {user.test_blocks_passed}
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        value={user.donated}
-                        onChange={(e) =>
-                          handleInputChange(
-                            index,
-                            "donated",
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                    </td>
-                    <td>
-                      <button
-                        type="submit"
-                        onClick={() => handleCheckboxClick(user)}
-                      >
-                        Оновити дані
-                      </button>
-                    </td>
+                    <th>Задонатив</th>
+                    <th>Оновити</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {userData.map((user, index) => (
+                    <tr key={index}>
+                      <td style={{ display: "none" }}>{user.id}</td>
+                      <td>
+                        <input
+                          type="text"
+                          value={user.name}
+                          onChange={(e) =>
+                            handleInputChange(index, "name", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          value={user.password}
+                          onChange={(e) =>
+                            handleInputChange(index, "password", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td style={{ display: "none" }}>{user.class_id}</td>
+                      <td style={{ display: "none" }}>{user.admin ? 1 : 0}</td>
+                      <td style={{ display: "none" }}>
+                        {user.test_blocks_passed}
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          value={user.donated}
+                          onChange={(e) =>
+                            handleInputChange(
+                              index,
+                              "donated",
+                              Number(e.target.value)
+                            )
+                          }
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="submit"
+                          onClick={() => handleCheckboxClick(user)}
+                        >
+                          Оновити дані
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : (
           <VideoModal

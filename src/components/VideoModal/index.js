@@ -159,10 +159,18 @@ function VideoModal({ onClose, userIds, userValues }) {
   return (
     <div className={styles.videoModal}>
       <div className={styles.videoModalContent}>
-        { (allDone || noQuestions || number > 7) && !showCert ? (
+        {(allDone || noQuestions || number > 7) && !showCert ? (
           <div className={styles.noQuestionsMessage}>
-            Дякуємо за відповідь і за вашу увагу! Для отримання сертифікату
-            зробіть донат і повідомте про це класного керівника.
+            Ви успішно пройшли навчання! Зробіть донат на карту :
+            5168752100069353 або за QR-кодом нижче.
+            <img
+              src="/qr-code.jpg"
+              alt="QR-code"
+              width="500"
+              height="400"
+            ></img>
+            Для отримання сертифікату надайте класному керівнику підтвердження
+            про донат.
           </div>
         ) : showTestComponent && !showCert ? (
           <TestComponent

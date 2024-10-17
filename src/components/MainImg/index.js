@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import * as styles from "./styles.module.scss"; // Ensure the path is correct
 import Modal from "../Modal"; // Ensure the path is correct
-import ClassImage from "../../../static/img/class.png"; // Adjust the path as needed
+import BackImage from "../../../static/img/back.jpg";
+import TextImage from "../../../static/img/text.png";
 import OpeningModal from "../OpeningModal";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 function MainImg() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const classes = [
     "1А",
     "1Б",
@@ -45,7 +48,7 @@ function MainImg() {
     // Set the CSS variable for the background image
     document.documentElement.style.setProperty(
       "--background-image",
-      `url(${ClassImage})`
+      `url(${BackImage})`
     );
     const fetchDonationAmount = async () => {
       try {
@@ -123,9 +126,12 @@ function MainImg() {
       <div className={styles.chessboard}>
         {zoomed.map((value, index) => {
           const row = Math.floor(index / 5); // 5 columns
+
           const col = index % 5;
-          const backgroundPosition = `${col * -150}px ${row * -200}px`; // Adjust based on grid size
-          const shouldFlip = classesData[value];
+
+          const backgroundPosition = `${col * -200}px ${row * -200}px`;
+          const mobileBackgroundPosition = `${col * -80}px ${row * -80}px`; // Adjust based on grid size
+          const shouldFlip = true;
           return (
             <div
               key={index}
@@ -138,8 +144,10 @@ function MainImg() {
                 <div
                   className={styles.chessSquareFront}
                   style={{
-                    backgroundPosition,
-                    backgroundImage: `url(${ClassImage})`,
+                    backgroundPosition: isMobile
+                      ? mobileBackgroundPosition
+                      : backgroundPosition,
+                    backgroundImage: `url(${TextImage})`,
                   }}
                 ></div>
                 <div className={styles.chessSquareBack}>{value}</div>

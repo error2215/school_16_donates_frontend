@@ -54,16 +54,21 @@
   margin-top: 70px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.5);
   @media (max-width: 768px) {
-    width: 90%;
+    min-width: 400px;
+    min-height: 400px;
+    height: 400px;
+    width: 400px;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
   }
 
   @media (max-width: 480px) {
-    width: 100%;
-
+    min-width: 400px;
+    min-height: 400px;
+    height: 400px;
+    width: 400px;
+    grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    height: 705px;
   }
 }
 
@@ -83,11 +88,11 @@
   opacity: 1;
   border: 1px solid rgba(255, 255, 255, 0.5);
   @media (max-width: 768px) {
-    background-size: 90% 90%;
+    background-size: 400x 400px;
   }
 
   @media (max-width: 480px) {
-    background-size: 100% 100%;
+    background-size: 400px 400px;
   }
 }
 .chessSquareInner {
@@ -112,14 +117,14 @@
 }
 
 .chessSquareFront {
-  background-size: 750px 1000px;
+  background-size: 1000px 1000px;
 
   @media (max-width: 768px) {
-    background-size: 90% 90%;
+    background-size: 400px 400px;
   }
 
   @media (max-width: 480px) {
-    background-size: 100% 100%;
+    background-size: 400px 400px;
   } // Ensure the background size covers the entire grid
 }
 

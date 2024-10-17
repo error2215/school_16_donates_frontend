@@ -50,6 +50,11 @@
     height: 100px;
   }
 }
+.tableContainer {
+  max-height: 493px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
 .userTable {
   width: 100%;
   border-collapse: collapse;
