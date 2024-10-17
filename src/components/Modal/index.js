@@ -5,6 +5,7 @@ import ProgressBar from "../ProgressBar"; // Import the ProgressBar component
 import LogIn from "../LogIn";
 import CertificateFetcher from "../Certificate";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { TbHeartCancel } from "react-icons/tb";
 
 function Modal({ onClose, classId, isVisible }) {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -138,7 +139,6 @@ function Modal({ onClose, classId, isVisible }) {
         {showRegistrationForm ? (
           showLogIn ? (
             <LogIn
-              id={id}
               classId={classId}
               onClose={handleClose}
               userIds={userIds}
@@ -188,9 +188,13 @@ function Modal({ onClose, classId, isVisible }) {
                               : ""
                           }`}
                       >
-                        {userIds.includes(`${classId}-${miniIndex.toString()}`)
-                          ? "Зайнято"
-                          : miniIndex + 1}
+                        {userIds.includes(
+                          `${classId}-${miniIndex.toString()}`
+                        ) ? (
+                          <TbHeartCancel />
+                        ) : (
+                          miniIndex + 1
+                        )}
                       </div>
                       <div
                         className={styles.miniSquareBack}

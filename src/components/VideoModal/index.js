@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
-import * as styles from "./styles.module.scss";
-import TestComponent from "../TestComponent";
+import React, { useEffect, useState } from "react";
 import Certificate from "../Certificate";
+import TestComponent from "../TestComponent";
+import * as styles from "./styles.module.scss";
 
-function VideoModal({ onClose, id, userIds, userValues }) {
+function VideoModal({ onClose, userIds, userValues }) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(-1); // Start with -1 to show the opening video first
   const [showTestComponent, setShowTestComponent] = useState(false);
   const [number, setNumber] = useState(0);
   const [noQuestions, setNoQuestions] = useState(false);
   const [allDone, setAllDone] = useState(false); // New state variable
+  const [showCert, setShowCert] = useState(false);
 
   const videoUrls = [
     "https://www.youtube.com/embed/cVgIEjytVIA",
@@ -21,10 +22,15 @@ function VideoModal({ onClose, id, userIds, userValues }) {
   ];
 
   useEffect(() => {
+    const id = localStorage.getItem("user_id"); // Get the id from localStorage
     console.log("userids", userIds);
     console.log("uservalues", userValues);
+    console.log("id", id);
     if (userIds !== undefined && userValues !== undefined) {
       console.log("id index  " + userValues[userIds.indexOf(id)]);
+      if (userValues[userIds.indexOf(id)]) {
+        setShowCert(true);
+      }
     }
     const fetchTestNumber = async () => {
       try {
@@ -56,7 +62,7 @@ function VideoModal({ onClose, id, userIds, userValues }) {
     };
 
     fetchTestNumber();
-  }, [id]);
+  }, [showCert]);
 
   const handleTestButtonClick = () => {
     setShowTestComponent(true);
@@ -81,10 +87,16 @@ function VideoModal({ onClose, id, userIds, userValues }) {
   };
 
   const showVideo = () => {
+    console.log("currentVideoIndex", currentVideoIndex);
+    console.log("userIds", userIds);
+    console.log("userValues", userValues);
+    const id = localStorage.getItem("user_id"); // Get the id from localStorage
+
     if (userIds !== undefined && userValues !== undefined) {
       const userIndex = userIds.indexOf(id);
       const userValue = userValues[userIndex];
-
+      console.log("userValue", userValue);
+      console.log("userIndex", userIndex);
       if (userValue) {
         return <Certificate userId={id} />; // Render the Certificate component if userValue is true
       }
@@ -116,6 +128,7 @@ function VideoModal({ onClose, id, userIds, userValues }) {
   };
 
   function showOpeningVideo() {
+    console.log("ttt", currentVideoIndex);
     return (
       <>
         <iframe
@@ -146,21 +159,20 @@ function VideoModal({ onClose, id, userIds, userValues }) {
   return (
     <div className={styles.videoModal}>
       <div className={styles.videoModalContent}>
-        {allDone || noQuestions || number > 7 ? (
+        { (allDone || noQuestions || number > 7) && !showCert ? (
           <div className={styles.noQuestionsMessage}>
             Дякуємо за відповідь і за вашу увагу! Для отримання сертифікату
             зробіть донат і повідомте про це класного керівника.
           </div>
-        ) : showTestComponent ? (
+        ) : showTestComponent && !showCert ? (
           <TestComponent
             onClose={handleCloseTestComponent}
-            id={id}
             onNextVideo={handleNextVideo}
             setNoQuestions={setNoQuestions}
             noQuestions={noQuestions}
             number={number}
           />
-        ) : currentVideoIndex === -1 ? (
+        ) : currentVideoIndex === -1 && !showCert ? (
           showOpeningVideo()
         ) : (
           showVideo()

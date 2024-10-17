@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import * as styles from "./styles.module.scss";
 import registrationImage from "../../../static/img/registration.png";
 import VideoModal from "../VideoModal"; // Import the VideoModal component
-import CertificateFetcher from "../Certificate"; // Import the CertificateFetcher component
+import * as styles from "./styles.module.scss";
 
-function LogIn({ id, classId, onClose, userIds, userValues }) {
+function LogIn({classId, onClose, userIds, userValues }) {
   const [formData, setFormData] = useState({
     name: "",
     password: "",
@@ -24,6 +23,18 @@ function LogIn({ id, classId, onClose, userIds, userValues }) {
     });
   };
 
+  // Utility function to decode JWT token
+function decodeJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setPasswordError("");
@@ -54,6 +65,11 @@ function LogIn({ id, classId, onClose, userIds, userValues }) {
 
         localStorage.setItem("token", result.token);
         localStorage.setItem("tokenExpiration", expirationTime);
+        
+        // const token = data.token; // Assuming the token is in the response
+        const decodedToken = decodeJwt(result.token);
+        const userId = decodedToken.user_id;
+        localStorage.setItem("user_id", userId);
 
         const getResponse = await fetch(
           `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/admin/users?class_id=${classId}`,
@@ -212,7 +228,6 @@ function LogIn({ id, classId, onClose, userIds, userValues }) {
         ) : (
           <VideoModal
             onClose={onClose}
-            id={id}
             userIds={userIds}
             userValues={userValues}
           />
