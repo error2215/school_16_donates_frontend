@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import * as styles from "./styles.module.scss";
-import RegistrationForm from "../RegistrationForm"; // Import the RegistrationForm component
-import ProgressBar from "../ProgressBar"; // Import the ProgressBar component
-import LogIn from "../LogIn";
-import CertificateFetcher from "../Certificate";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import React, { useEffect, useState } from "react";
 import { TbHeartCancel } from "react-icons/tb";
+import LogIn from "../LogIn";
+import ProgressBar from "../ProgressBar"; // Import the ProgressBar component
+import RegistrationForm from "../RegistrationForm"; // Import the RegistrationForm component
+import * as styles from "./styles.module.scss";
 
 function Modal({ onClose, classId, isVisible }) {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -13,13 +12,13 @@ function Modal({ onClose, classId, isVisible }) {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [showLogIn, setShowLogIn] = useState(false);
   const [id, setId] = useState();
-  const [flipped, setFlipped] = useState(Array(20).fill(false)); // Default to not flipped
+  const [flipped, setFlipped] = useState(Array(30).fill(false)); // Default to not flipped
   const [userIds, setUserIds] = useState([]);
   const [userValues, setUserValues] = useState([]);
   let progress = 0;
 
   const classesUrl = {
-    "1A": "/1A.jpg",
+    "1А": "/1A.jpg",
     "1Б": "/1B.jpg",
     "2А": "/2A.jpg",
     "2Б": "/2B.jpg",
@@ -122,7 +121,7 @@ function Modal({ onClose, classId, isVisible }) {
 
   useEffect(() => {
     if (progress >= 80) {
-      setFlipped(Array(20).fill(true));
+      setFlipped(Array(30).fill(true));
     }
   }, [progress]);
 
@@ -155,14 +154,14 @@ function Modal({ onClose, classId, isVisible }) {
         ) : (
           // <LogIn onClose={handleClose} />
           <div className={styles.miniBoard}>
-            {Array(20)
+            {Array(30)
               .fill(null)
               .map((_, miniIndex) => {
-                const row = Math.floor(miniIndex / 5);
-                const col = miniIndex % 5;
-                const backgroundPosition = `${col * -160}px ${row * -100}px`;
-                const mobileBackgroundPosition = `${col * -80}px ${
-                  row * -50
+                const row = Math.floor(miniIndex / 6);
+                const col = miniIndex % 6 ;
+                const backgroundPosition = `${col * -200}px ${row * -120}px`;
+                const mobileBackgroundPosition = `${col * - 70}px ${
+                  row * - 42
                 }px`;
                 const userIndex = userIds.indexOf(
                   `${classId}-${miniIndex.toString()}`
