@@ -138,7 +138,6 @@ function Modal({ onClose, classId, isVisible }) {
         {showRegistrationForm ? (
           showLogIn ? (
             <LogIn
-              id={id}
               classId={classId}
               onClose={handleClose}
               userIds={userIds}

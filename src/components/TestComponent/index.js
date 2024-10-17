@@ -3,7 +3,6 @@ import * as styles from "./styles.module.scss"; // Import the CSS module
 
 const TestComponent = ({
   onClose,
-  id,
   onNextVideo,
   setNoQuestions,
   noQuestions,
@@ -20,7 +19,7 @@ const TestComponent = ({
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token"); // Get the token from localStorage
-
+        const id = localStorage.getItem("user_id"); // Get the id from localStorage
         const response = await fetch(
           `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/user/test?user_id=${encodeURIComponent(
             id
@@ -52,7 +51,7 @@ const TestComponent = ({
     };
 
     fetchData();
-  }, [id, setNoQuestions]);
+  }, [setNoQuestions]);
 
   const handleCheckboxChange = (questionIndex, answerIndex) => {
     setSelectedAnswers((prevSelectedAnswers) => {
@@ -101,7 +100,8 @@ const TestComponent = ({
 
   const handlePostResults = async () => {
     const token = localStorage.getItem("token"); // Get the token from localStorage
-
+    const id = localStorage.getItem("user_id")
+    
     const response = await fetch(
       `https://school-16-donates-backend-835922863351.europe-central2.run.app/api/v1/user/test`,
       {
