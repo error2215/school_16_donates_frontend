@@ -41,7 +41,7 @@ const CertificateFetcher = ({ userId }) => {
   }, [userId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Завантажую...</div>;
   }
 
   if (error) {

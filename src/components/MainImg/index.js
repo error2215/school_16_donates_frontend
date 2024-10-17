@@ -160,7 +160,7 @@ function MainImg() {
       <div className={styles.sum}>
         <h1>
           Дякуємо за донат! Вже зібрано :{" "}
-          {donationAmount !== null ? donationAmount : "Loading..."}
+          {donationAmount !== null ? donationAmount : "Завантажую..."}
           &#8372; (гривень)
         </h1>
       </div>

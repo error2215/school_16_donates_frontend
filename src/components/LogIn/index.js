@@ -146,14 +146,14 @@ function LogIn({ id, classId, onClose, userIds, userValues }) {
               <thead>
                 <tr>
                   <th style={{ display: "none" }}>ID</th>
-                  <th>Name</th>
-                  <th>Password</th>
+                  <th>Ім'я</th>
+                  <th>Пароль</th>
                   <th style={{ display: "none" }}>ClassId</th>
                   <th style={{ display: "none" }}>Admin</th>
                   <th style={{ display: "none" }}>TestBlockPass</th>
 
-                  <th>Donated</th>
-                  <th>Action</th>
+                  <th>Задонатив</th>
+                  <th>Оновити</th>
                 </tr>
               </thead>
               <tbody>

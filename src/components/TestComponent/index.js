@@ -94,7 +94,7 @@ const TestComponent = ({
     });
 
     setResultMessage(
-      `You answered ${correctCount} out of ${data.length} questions correctly.`
+      `Ти відповів(ла) на ${correctCount} з ${data.length} питань правильно.`
     );
     setAllCorrect(allCorrect);
   };
@@ -159,7 +159,7 @@ const TestComponent = ({
       )}
       {allCorrect && (
         <button onClick={handlePostResults} className={styles.postButton}>
-          Результати тесту :
+          Наступне питання!
         </button>
       )}
     </div>
